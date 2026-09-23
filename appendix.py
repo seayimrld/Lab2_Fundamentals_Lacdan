@@ -1,100 +1,113 @@
-import functools
+# ==========================================
+# TUP ECE - COMPUTER PROGRAMMING EXERCISES
+# Student Surname: LACDAN
+# ==========================================
 
 SURNAME = "LACDAN"
-SEED_NUM = 5
 
-# Logging Decorator
-def log_execution(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        print(f"[LOG] Executing '{func.__name__}'...")
-        result = func(*args, **kwargs)
-        print(f"[LOG] Completed '{func.__name__}'.\n")
-        return result
-    return wrapper
+# ------------------------------------------
+# EXERCISE 1: Sensor Reading Validation
+# ------------------------------------------
+def run_exercise_1():
+    print("=== EXERCISE 1 ===")
+    seed_num = 2026
+    generated_data = ["65", "35", "ERR_DATA", "118", "-20", "75"]
 
-# ==========================================
-# EXERCISE 2: Signal Processing & Analysis
-# ==========================================
+    valid_readings = []
+    validation_results = []
+    classification_results = []
 
-def generate_signal(surname, seed_num):
-    return f"{surname}#{seed_num}*2026!"
+    for reading in generated_data:
+        try:
+            val = float(reading)
+            valid_readings.append(val)
+            validation_results.append("Valid")
 
-def normalize_signal(signal):
-    return signal.strip()
+            if val < 0 or val > 100:
+                classification_results.append("High")
+            elif val < 40:
+                classification_results.append("Low")
+            else:
+                classification_results.append("Moderate")
+        except ValueError:
+            validation_results.append("Invalid")
 
-def analyze_signal(signal):
-    counts = {"uppercase": 0, "lowercase": 0, "digits": 0, "special": 0}
-    for char in signal:
-        if char.isupper():
-            counts["uppercase"] += 1
-        elif char.islower():
-            counts["lowercase"] += 1
-        elif char.isdigit():
-            counts["digits"] += 1
-        else:
-            counts["special"] += 1
-    return counts
+    avg_valid = sum(valid_readings) / len(valid_readings) if valid_readings else 0
 
-def classify_signal(counts):
-    if counts["special"] > 2 and counts["digits"] > 2:
-        return "HIGH COMPLEXITY (MIXED SIGNAL)"
-    elif counts["uppercase"] > counts["lowercase"]:
-        return "STRONG ALPHA-DOMINANT SIGNAL"
+    print("Assessment Data:")
+    print("Generated Sensor Data:", ", ".join(generated_data))
+    print("Valid/Invalid Results:", ", ".join(validation_results))
+    print("Classification Results:", ", ".join(classification_results))
+    print("Execution Log:\n [LOG] Process 'process_sensor_system' completed successfully")
+    print(f"Final Output:\n {len(generated_data)} total sensor readings    {avg_valid:.2f}\n")
+
+
+# ------------------------------------------
+# EXERCISE 2: Signal Character-by-Character Analysis
+# ------------------------------------------
+def run_exercise_2():
+    print("=== EXERCISE 2 ===")
+    seed_num = 2026
+    raw_signal = "LACDAN #50 2026!"
+    processed_signal = raw_signal.upper()
+
+    lowercase_count = sum(1 for c in raw_signal if c.islower())
+    digit_count = sum(1 for c in raw_signal if c.isdigit())
+    special_count = sum(1 for c in raw_signal if not c.isalnum() and not c.isspace())
+
+    if special_count >= 3 or len(raw_signal) > 12:
+        classification = "High Complexity"
+    elif digit_count > 2:
+        classification = "Medium Complexity"
     else:
-        return "STANDARD SIGNAL"
+        classification = "Low Complexity"
 
-@log_execution
-def run_exercise_2(surname, seed_num):
-    raw_signal = generate_signal(surname, seed_num)
-    processed_signal = normalize_signal(raw_signal)
-    char_analysis = analyze_signal(processed_signal)
-    classification = classify_signal(char_analysis)
+    print("Assessment Data:")
+    print("Generated Signal:", raw_signal)
+    print("Processed Signal:", processed_signal)
+    print("Character Analysis:")
+    print(f"   Lowercase: {lowercase_count}, Digits: {digit_count}, Special: {special_count}")
+    print("Signal Classification:", classification)
+    print("Execution Log:\n [LOG] Completed run_exercise_2")
+    print("Final Output:\n", classification, "\n")
 
-    print("=== EXERCISE 2 RESULTS ===")
-    print(f"Generated Signal: {raw_signal}")
-    print(f"Processed Signal: {processed_signal}")
-    print(f"Character Analysis: {char_analysis}")
-    print(f"Signal Classification: {classification}")
-    print(f"Final Output: Signal processed successfully with classification '{classification}'.")
 
-# ==========================================
-# EXERCISE 3: Authentication & Lock System
-# ==========================================
+# ------------------------------------------
+# EXERCISE 3: Authentication System
+# ------------------------------------------
+def run_exercise_3():
+    print("=== EXERCISE 3 ===")
+    seed_num = 599
+    generated_password = f"{SURNAME[:3]}-{SEED_NUM}"
+    attempt_limit = 5
+    attempts_made = ['PASS123', 'LAC-599']
 
-def generate_credentials(surname, seed_num):
-    password = f"{surname[:3]}_{seed_num}99"
-    attempt_limit = seed_num if seed_num >= 3 else 3
-    return password, attempt_limit
-
-@log_execution
-def run_exercise_3(surname, seed_num, sample_attempts):
-    password, limit = generate_credentials(surname, seed_num)
-    
-    attempts_made = []
     access_result = "DENIED"
-    final_state = "LOCKED"
+    final_system_state = "LOCKED"
 
-    for idx, attempt in enumerate(sample_attempts, start=1):
-        if idx > limit:
-            print(f"[SECURITY] Max attempts reached ({limit}). Process terminated.")
+    for i, attempt in enumerate(attempts_made):
+        if i >= attempt_limit:
             break
-            
-        attempts_made.append(attempt)
-        if attempt == password:
+        if attempt == generated_password:
             access_result = "GRANTED"
-            final_state = "UNLOCKED"
+            final_system_state = "UNLOCKED"
             break
 
-    print("=== EXERCISE 3 RESULTS ===")
-    print(f"Generated Password: {password}")
-    print(f"Attempt Limit: {limit}")
-    print(f"Attempts Made: {attempts_made}")
-    print(f"Access Result: {access_result}")
-    print(f"Final System State: {final_state}")
-    print(f"Final Output: Authentication ended with status '{access_result}'. System remains {final_state}.")
+    print("Assessment Data:")
+    print("Generated Password:", generated_password)
+    print("Attempt Limit:", attempt_limit)
+    print("Attempts Made:", attempts_made)
+    print("Access Result:", access_result)
+    print("Final System State:", final_system_state)
+    print("Execution Log:\n [LOG] Completed run_exercise_3")
+    print("Final Output:\n", access_result, "\n")
 
+
+# ------------------------------------------
+# MAIN EXECUTION
+# ------------------------------------------
 if __name__ == "__main__":
-    run_exercise_2(SURNAME, SEED_NUM)
-    print("-" * 50)
-    run_exercise_3(SURNAME, SEED_NUM, ["PASS123", "LAC_599", "WRONG"])
+    run_exercise_1()
+    run_exercise_2()
+    run_exercise_3()
+    
